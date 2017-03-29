@@ -3,9 +3,6 @@ import requests
 
 app = Flask(__name__)
 
-@app.route("/")
-def hello():
-    return "Hello World!"
 
 # @app.route("/1live")
 # def einslive():

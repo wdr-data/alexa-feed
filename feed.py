@@ -48,7 +48,7 @@ def get_feed(feed):
                                                            'https://media.data.wdr.de')
     resp['redirectionUrl'] = HTML_URL % feeds[feed]
     
-    return Response(json.dumps(resp), mimetype='application/json')
+    return Response(json.dumps(resp), mimetype='application/json', content_type='application/json; charset=utf-8')
 
 if __name__ == "__main__":
     app.run()

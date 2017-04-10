@@ -34,6 +34,9 @@ feeds = {
 
 @app.route("/<feed>")
 def get_feed(feed):
+    if feed not in feeds:
+        return '', 404
+
     r = requests.get(PODCAST_URL % feeds[feed])
     soup = BeautifulSoup(r.text, 'lxml')
     resp = SINGLE_AUDIO.copy()

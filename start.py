@@ -4,6 +4,7 @@
 import os
 
 import cherrypy
+from paste.translogger import TransLogger
 
 import feed
 
@@ -22,7 +23,7 @@ class FlaskApplication(object):
         })
 
         cherrypy.log("Loading and serving Flask application")
-        cherrypy.tree.graft(feed.app, '/')
+        cherrypy.tree.graft(TransLogger(feed.app), '/')
         cherrypy.engine.start()
         cherrypy.log("Your app is running at http://%s:%s" % (self.HOST, self.PORT))
 

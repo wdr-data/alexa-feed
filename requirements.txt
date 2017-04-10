@@ -1,5 +1,6 @@
 flask
 cherrypy
+paste
 requests
 beautifulsoup4
 lxml

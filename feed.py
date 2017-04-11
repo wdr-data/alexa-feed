@@ -24,22 +24,21 @@ SINGLE_AUDIO = {
   "redirectionUrl": None
 }
 
-PODCAST_URL = 'https://www1.wdr.de/mediathek/audio/%s/%s.podcast'
-HTML_URL = 'https://www1.wdr.de/mediathek/audio/%s/%s.html'
+PODCAST_URL = 'https://www1.wdr.de/mediathek/audio/%s.podcast'
+HTML_URL = 'https://www1.wdr.de/mediathek/audio/%s.html'
 
-feeds = {
-    'wdr-aktuell': ('wdr-aktuell', 'wdr-aktuell-1-100'),
-    'wdr-zeitzeichen': ('zeitzeichen', 'zeitzeichen-1-100'),
-    '1live-infos': ('1live/infos', 'infos-1-100'),
-    'wdr2-stichtag': ('wdr2/wdr2-stichtag', 'stichtag-1-100'),
-}
 
-@app.route("/<feed>")
-def get_feed(feed):
-    if feed not in feeds:
-        return '', 404
+@app.route("/<path1>.podcast")
+@app.route("/<path1>/<path2>.podcast")
+@app.route("/<path1>/<path2>/<path3>.podcast")
+def get_feed(path1=None, path2=None, path3=None):
+    feed = '/'.join(filter(bool, (path1, path2, path3)))
 
-    r = requests.get(PODCAST_URL % feeds[feed])
+    r = requests.get(PODCAST_URL % feed)
+    
+    if r.status_code == 404:
+        return 'Resource %s not found' % PODCAST_URL % feed, 404
+
     soup = BeautifulSoup(r.text, 'lxml')
     resp = SINGLE_AUDIO.copy()
     chan = soup.rss.channel
@@ -51,7 +50,7 @@ def get_feed(feed):
     resp['titleText'] = chan.title.string
     resp['streamUrl'] = chan.item.enclosure['url'].replace('http://podcast-ww.wdr.de', 
                                                            'https://media.data.wdr.de')
-    resp['redirectionUrl'] = HTML_URL % feeds[feed]
+    resp['redirectionUrl'] = HTML_URL % feed
     
     return Response(json.dumps(resp), mimetype='application/json')
 

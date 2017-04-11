@@ -30,6 +30,8 @@ HTML_URL = 'https://www1.wdr.de/mediathek/audio/%s/%s.html'
 feeds = {
     'wdr-aktuell': ('wdr-aktuell', 'wdr-aktuell-1-100'),
     'wdr-zeitzeichen': ('zeitzeichen', 'zeitzeichen-1-100'),
+    '1live-infos': ('1live/infos', 'infos-1-100'),
+    'wdr2-stichtag': ('wdr2/wdr2-stichtag', 'stichtag-1-100'),
 }
 
 @app.route("/<feed>")

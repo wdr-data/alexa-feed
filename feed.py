@@ -40,7 +40,7 @@ def wdraktuell_hourly():
     resp['updateDate'] = update_time.strftime('%Y-%m-%dT%H:%M:%S.0Z')  # 2017-04-10T16:00:16.0Z
     resp['titleText'] = "WDR Aktuell"
     resp['streamUrl'] = 'https://feeds.data.wdr.de/static/' + f
-    resp['redirectionUrl'] = ""
+    resp['redirectionUrl'] = "www1.wdr.de/mediathek/audio/wdr-aktuell/wdr-aktuell-140.podcast"
     
     return Response(json.dumps(resp), mimetype='application/json')
 

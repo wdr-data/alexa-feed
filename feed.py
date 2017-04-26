@@ -1,14 +1,17 @@
 import json
 from datetime import datetime
 import locale
+from glob import glob
+import os
 
 from flask import Flask, Response
 import requests
 from bs4 import BeautifulSoup
 
 locale.setlocale(locale.LC_TIME, "C")
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='wdraktuell', static_url_path='/static')
 
 
 # @app.route("/1live")
@@ -26,6 +29,19 @@ SINGLE_AUDIO = {
 
 PODCAST_URL = 'https://www1.wdr.de/mediathek/audio/%s.podcast'
 HTML_URL = 'https://www1.wdr.de/mediathek/audio/%s.html'
+
+@app.route("/wdraktuell-hourly")
+def wdraktuell_hourly():
+    f = max([os.path.basename(path) for path in glob('wdraktuell/WDRAKTUELL*')])
+    
+    resp = SINGLE_AUDIO.copy()
+    update_time = datetime.strptime(f, 'WDRAKTUELL-%Y%m%d%H%M.mp3')
+    resp['updateDate'] = update_time.strftime('%Y-%m-%dT%H:%M:%S.0Z')  # 2017-04-10T16:00:16.0Z
+    resp['titleText'] = "WDR Aktuell"
+    resp['streamUrl'] = 'https://127.0.0.1:5001/static/' + f
+    resp['redirectionUrl'] = ""
+    
+    return Response(json.dumps(resp), mimetype='application/json')
 
 
 @app.route("/<path1>.podcast")

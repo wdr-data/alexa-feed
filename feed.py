@@ -35,10 +35,11 @@ def wdraktuell_hourly():
     f = max([os.path.basename(path) for path in glob('wdraktuell/WDRAKTUELL*')])
     
     resp = SINGLE_AUDIO.copy()
+    resp['uid'] = os.path.splitext(f)[0]
     update_time = datetime.strptime(f, 'WDRAKTUELL-%Y%m%d%H%M.mp3')
     resp['updateDate'] = update_time.strftime('%Y-%m-%dT%H:%M:%S.0Z')  # 2017-04-10T16:00:16.0Z
     resp['titleText'] = "WDR Aktuell"
-    resp['streamUrl'] = 'https://127.0.0.1:5001/static/' + f
+    resp['streamUrl'] = 'https://feeds.data.wdr.de/static/' + f
     resp['redirectionUrl'] = ""
     
     return Response(json.dumps(resp), mimetype='application/json')

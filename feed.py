@@ -67,6 +67,10 @@ def get_feed(path1=None, path2=None, path3=None):
     resp['titleText'] = chan.title.string
     resp['streamUrl'] = chan.item.enclosure['url'].replace('http://podcast-ww.wdr.de', 
                                                            'https://media.data.wdr.de')
+
+    if resp['streamUrl'].startswith('//'):  # Hotfix fuer webtechnik...
+        resp['streamUrl'] = 'https:' + resp['streamUrl']
+
     resp['redirectionUrl'] = HTML_URL % feed
     
     return Response(json.dumps(resp), mimetype='application/json')
